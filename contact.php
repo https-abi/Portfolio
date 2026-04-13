@@ -25,7 +25,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($form_errors) && $captcha) {
         $form_success = true;
-        // ── TODO: Send email or save to DB here ───────────────
+        $conn = mysqli_connect("localhost", "root", "", "portfolio");
+        $stmt = mysqli_prepare($conn, "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "sss", $name, $email, $message);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        mysqli_close($conn);
         // mail('you@example.com', 'New message from ' . $name, $message, 'From: ' . $email);
         $old = ['name' => '', 'email' => '', 'message' => ''];
         $show_captcha = false;
@@ -39,10 +44,7 @@ require 'header.php';
 
   <!-- PAGE 3 · Contact -->
   <div class="hero">
-    <span class="tag">✉ Let's connect</span>
-
-    <h1>Get in</h1>
-    <h1 class="accent-line">Touch</h1>
+    <h1>Get in Touch</h1>
 
     <div class="divider"></div>
 
